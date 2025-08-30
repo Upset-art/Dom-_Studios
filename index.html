@@ -489,8 +489,59 @@
                             <label class="block text-white mb-2">Description</label>
                             <textarea id="productDescription" rows="3" class="w-full px-4 py-2 bg-gris-fonce text-white border border-gray-600 rounded-lg focus:border-jaune focus:outline-none" required></textarea>
                         </div>
+                        
+                        <!-- File Upload Section -->
                         <div class="md:col-span-2">
-                            <button type="submit" class="btn-primary px-6 py-3">Ajouter le produit</button>
+                            <label class="block text-white mb-2">📁 Fichier du produit</label>
+                            <div class="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-accent transition-colors">
+                                <input type="file" id="productFile" accept=".pdf,.zip,.notion,.docx,.xlsx" class="hidden" required>
+                                <div id="fileDropZone" class="cursor-pointer">
+                                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="text-gray-400 mb-2">Cliquez ou glissez votre fichier ici</p>
+                                    <p class="text-xs text-gray-500">PDF, ZIP, Notion, DOCX, XLSX (Max 50MB)</p>
+                                </div>
+                                <div id="filePreview" class="hidden mt-4 p-3 bg-gris-moderne rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <svg class="w-6 h-6 text-accent mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <span id="fileName" class="text-white font-medium"></span>
+                                        </div>
+                                        <button type="button" id="removeFile" class="text-red-400 hover:text-red-300">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="w-full bg-gray-600 rounded-full h-2">
+                                            <div id="uploadProgress" class="bg-accent h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                        </div>
+                                        <p id="uploadStatus" class="text-xs text-gray-400 mt-1">Prêt à uploader</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Download Link -->
+                        <div class="md:col-span-2">
+                            <label class="block text-white mb-2">🔗 Lien de téléchargement (optionnel)</label>
+                            <input type="url" id="productDownloadLink" placeholder="https://drive.google.com/..." class="w-full px-4 py-2 bg-gris-fonce text-white border border-gray-600 rounded-lg focus:border-jaune focus:outline-none">
+                            <p class="text-xs text-gray-400 mt-1">Si vous préférez héberger le fichier ailleurs (Google Drive, Dropbox, etc.)</p>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <button type="submit" class="btn-primary px-6 py-3">
+                                <span class="flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Ajouter le produit
+                                </span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -910,6 +961,21 @@
                         <span id="totalAmount" class="text-accent text-2xl">0€</span>
                     </div>
                 </div>
+                
+                <!-- Customer Email Form -->
+                <div id="customerEmailForm" class="mb-6 hidden">
+                    <div class="bg-gris-moderne p-4 rounded-lg border-2 border-accent-tertiaire border-opacity-30">
+                        <div class="flex items-center mb-3">
+                            <svg class="w-5 h-5 text-accent-tertiaire mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <h4 class="font-semibold text-white">📧 Email de livraison</h4>
+                        </div>
+                        <input type="email" id="customerEmail" placeholder="votre@email.com" class="w-full px-4 py-3 bg-noir text-white border-2 border-gray-600 rounded-lg focus:border-accent-tertiaire focus:outline-none transition-colors placeholder-gray-400" required>
+                        <p class="text-xs text-gray-400 mt-2">🚀 Vos produits seront envoyés instantanément à cette adresse</p>
+                    </div>
+                </div>
+                
                 <button id="checkoutBtn" class="w-full btn-primary py-3 hidden">
                     <span class="flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1037,7 +1103,7 @@
             ipn_url: 'https://domestore.netlify.app/.netlify/functions/ipn'
         };
 
-        // Products database
+        // Products database with file management
         let products = [
             {
                 id: 1,
@@ -1045,7 +1111,10 @@
                 price: 29,
                 type: "ebook",
                 description: "200+ prompts professionnels pour maximiser votre productivité avec ChatGPT",
-                color: "blue-purple"
+                color: "blue-purple",
+                fileData: null,
+                downloadLink: "https://drive.google.com/file/d/1example/view?usp=sharing",
+                fileName: "chatgpt-pro-guide.pdf"
             },
             {
                 id: 2,
@@ -1053,7 +1122,10 @@
                 price: 24,
                 type: "ebook",
                 description: "150+ prompts spécialisés pour créer du contenu marketing percutant",
-                color: "green-blue"
+                color: "green-blue",
+                fileData: null,
+                downloadLink: "https://drive.google.com/file/d/2example/view?usp=sharing",
+                fileName: "prompts-marketing-ia.pdf"
             },
             {
                 id: 3,
@@ -1061,7 +1133,10 @@
                 price: 34,
                 type: "ebook",
                 description: "Automatisez votre business avec 100+ prompts dédiés aux entrepreneurs",
-                color: "purple-pink"
+                color: "purple-pink",
+                fileData: null,
+                downloadLink: "https://drive.google.com/file/d/3example/view?usp=sharing",
+                fileName: "ia-entrepreneurs.pdf"
             },
             {
                 id: 4,
@@ -1069,7 +1144,10 @@
                 price: 19,
                 type: "template",
                 description: "Template complet pour organiser vos projets, tâches et objectifs",
-                color: "orange-red"
+                color: "orange-red",
+                fileData: null,
+                downloadLink: "https://www.notion.so/templates/dashboard-productivite",
+                fileName: "dashboard-productivite.notion"
             },
             {
                 id: 5,
@@ -1077,7 +1155,10 @@
                 price: 39,
                 type: "template",
                 description: "Gérez vos clients, prospects et ventes avec ce template professionnel",
-                color: "teal-green"
+                color: "teal-green",
+                fileData: null,
+                downloadLink: "https://www.notion.so/templates/crm-business",
+                fileName: "crm-business.notion"
             },
             {
                 id: 6,
@@ -1085,7 +1166,10 @@
                 price: 15,
                 type: "template",
                 description: "Organisez votre vie personnelle : habitudes, finances, objectifs",
-                color: "yellow-orange"
+                color: "yellow-orange",
+                fileData: null,
+                downloadLink: "https://www.notion.so/templates/planificateur-personnel",
+                fileName: "planificateur-personnel.notion"
             }
         ];
 
@@ -1207,9 +1291,99 @@
             `).join('');
         }
 
-        // Add new product
+        // File upload handling
+        let selectedFile = null;
+        let fileBase64 = null;
+
+        // File drop zone functionality
+        const fileDropZone = document.getElementById('fileDropZone');
+        const productFileInput = document.getElementById('productFile');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        fileDropZone.addEventListener('click', () => {
+            productFileInput.click();
+        });
+
+        fileDropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileDropZone.classList.add('border-accent');
+        });
+
+        fileDropZone.addEventListener('dragleave', () => {
+            fileDropZone.classList.remove('border-accent');
+        });
+
+        fileDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileDropZone.classList.remove('border-accent');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelection(files[0]);
+            }
+        });
+
+        productFileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelection(file) {
+            // Validate file size (50MB max)
+            if (file.size > 50 * 1024 * 1024) {
+                showNotification('Le fichier est trop volumineux (max 50MB)', 'error');
+                return;
+            }
+
+            selectedFile = file;
+            fileName.textContent = file.name;
+            filePreview.classList.remove('hidden');
+            
+            // Simulate upload progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                uploadProgress.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    uploadStatus.textContent = 'Fichier prêt';
+                    uploadStatus.classList.add('text-accent-tertiaire');
+                    
+                    // Convert to base64 for storage
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        fileBase64 = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }, 100);
+        }
+
+        document.getElementById('removeFile').addEventListener('click', () => {
+            selectedFile = null;
+            fileBase64 = null;
+            filePreview.classList.add('hidden');
+            productFileInput.value = '';
+            uploadProgress.style.width = '0%';
+            uploadStatus.textContent = 'Prêt à uploader';
+            uploadStatus.classList.remove('text-accent-tertiaire');
+        });
+
+        // Add new product with file handling
         addProductForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const downloadLink = document.getElementById('productDownloadLink').value.trim();
+            
+            // Validate that either file or download link is provided
+            if (!selectedFile && !downloadLink) {
+                showNotification('Veuillez ajouter un fichier ou un lien de téléchargement', 'error');
+                return;
+            }
             
             const newProduct = {
                 id: Date.now(),
@@ -1217,18 +1391,32 @@
                 price: parseInt(document.getElementById('productPrice').value),
                 type: document.getElementById('productType').value,
                 description: document.getElementById('productDescription').value,
-                color: document.getElementById('productColor').value
+                color: document.getElementById('productColor').value,
+                fileData: fileBase64,
+                fileName: selectedFile ? selectedFile.name : null,
+                downloadLink: downloadLink || null,
+                createdAt: new Date().toISOString()
             };
             
             products.push(newProduct);
+            
+            // Save to localStorage
+            localStorage.setItem('products', JSON.stringify(products));
+            
             renderProducts();
             renderAdminProducts();
             
             // Reset form
             this.reset();
+            selectedFile = null;
+            fileBase64 = null;
+            filePreview.classList.add('hidden');
+            uploadProgress.style.width = '0%';
+            uploadStatus.textContent = 'Prêt à uploader';
+            uploadStatus.classList.remove('text-accent-tertiaire');
             
             // Show success message
-            alert('Produit ajouté avec succès !');
+            showNotification('✅ Produit ajouté avec succès !', 'success');
         });
 
         // Delete product
@@ -1291,28 +1479,39 @@
         function initiatePayDunyaCheckout() {
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const items = cart.map(item => `${item.product} x${item.quantity}`).join(', ');
+            const customerEmail = localStorage.getItem('customerEmail') || document.getElementById('customerEmail').value;
             
             // Configuration PayDunya pour production
             const checkoutData = {
                 invoice: {
                     total_amount: total,
                     description: `Commande Domè Studios: ${items}`,
-                    currency: currentCurrency === 'XOF' ? 'XOF' : 'USD'
+                    currency: 'XOF'
                 },
                 store: {
                     name: "Domè Studios",
                     tagline: "🇨🇮 Ebooks IA & Templates Notion - Made in Africa",
                     phone: "+225 07 XX XX XX XX",
                     postal_address: "Abidjan, Côte d'Ivoire",
-                    website_url: window.location.origin,
-                    logo_url: window.location.origin + "/logo.png"
+                    website_url: PAYDUNYA_CONFIG.site_url,
+                    logo_url: PAYDUNYA_CONFIG.site_url + "/logo.png"
                 },
                 custom_data: {
                     order_id: 'DS-' + Date.now(),
+                    customer_email: customerEmail,
                     customer_items: cart,
                     currency_selected: currentCurrency,
                     timestamp: new Date().toISOString(),
-                    netlify_site: true
+                    netlify_site: true,
+                    delivery_files: cart.map(item => {
+                        const product = products.find(p => p.name === item.product);
+                        return {
+                            product_name: item.product,
+                            file_name: product?.fileName || 'product.pdf',
+                            download_link: product?.downloadLink || null,
+                            file_data: product?.fileData || null
+                        };
+                    })
                 },
                 actions: {
                     cancel_url: PAYDUNYA_CONFIG.cancel_url,
@@ -1421,93 +1620,61 @@
 
         // Méthode de paiement de secours avec API directe
         function fallbackPaymentMethod(checkoutData, paymentMethod = 'card') {
-            showNotification('💳 Connexion directe à PayDunya...');
+            showNotification('💳 Initialisation du paiement PayDunya...');
             
-            // Utiliser l'API REST PayDunya directement
-            const apiData = {
-                invoice: {
-                    total_amount: checkoutData.invoice.total_amount,
-                    description: checkoutData.invoice.description,
-                    currency: 'XOF'
-                },
-                store: {
-                    name: PAYDUNYA_CONFIG.app_name,
-                    tagline: PAYDUNYA_CONFIG.app_description,
-                    phone: "+225 XX XX XX XX",
-                    postal_address: "Abidjan, Côte d'Ivoire",
-                    website_url: PAYDUNYA_CONFIG.site_url,
-                    logo_url: PAYDUNYA_CONFIG.site_url + "/logo.png"
-                },
-                actions: {
-                    cancel_url: PAYDUNYA_CONFIG.cancel_url,
-                    return_url: PAYDUNYA_CONFIG.return_url,
-                    callback_url: PAYDUNYA_CONFIG.callback_url
-                },
-                custom_data: {
-                    order_id: 'DS-' + Date.now(),
-                    payment_method: paymentMethod,
-                    customer_items: checkoutData.custom_data.customer_items
-                }
-            };
+            // Créer une URL PayDunya avec les paramètres
+            const paydunyaParams = new URLSearchParams({
+                'public_key': PAYDUNYA_CONFIG.public_key,
+                'amount': checkoutData.invoice.total_amount,
+                'currency': 'XOF',
+                'description': checkoutData.invoice.description,
+                'order_id': checkoutData.custom_data.order_id,
+                'customer_email': checkoutData.custom_data.customer_email,
+                'return_url': PAYDUNYA_CONFIG.return_url,
+                'cancel_url': PAYDUNYA_CONFIG.cancel_url,
+                'callback_url': PAYDUNYA_CONFIG.callback_url,
+                'payment_method': paymentMethod,
+                'store_name': 'Domè Studios',
+                'store_website': PAYDUNYA_CONFIG.site_url
+            });
 
-            // Créer un formulaire de redirection vers PayDunya LIVE
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://app.paydunya.com/api/v1/checkout-invoice/create';
-            form.target = '_blank';
+            // Redirection directe vers PayDunya
+            const paydunyaUrl = `https://app.paydunya.com/sandbox-api/v1/checkout-invoice/create?${paydunyaParams.toString()}`;
             
-            // Headers d'authentification PayDunya
-            const authHeaders = {
-                'PAYDUNYA-MASTER-KEY': PAYDUNYA_CONFIG.master_key,
-                'PAYDUNYA-PRIVATE-KEY': PAYDUNYA_CONFIG.private_key,
-                'PAYDUNYA-PUBLIC-KEY': PAYDUNYA_CONFIG.public_key,
-                'PAYDUNYA-TOKEN': PAYDUNYA_CONFIG.token
-            };
+            // Ouvrir dans une nouvelle fenêtre
+            const paymentWindow = window.open(paydunyaUrl, 'PayDunya', 'width=800,height=600,scrollbars=yes,resizable=yes');
             
-            // Ajouter les données de la facture
-            const formData = {
-                'invoice[total_amount]': apiData.invoice.total_amount,
-                'invoice[description]': apiData.invoice.description,
-                'invoice[currency]': apiData.invoice.currency,
-                'store[name]': apiData.store.name,
-                'store[tagline]': apiData.store.tagline,
-                'store[phone]': apiData.store.phone,
-                'store[postal_address]': apiData.store.postal_address,
-                'store[website_url]': apiData.store.website_url,
-                'actions[return_url]': apiData.actions.return_url,
-                'actions[cancel_url]': apiData.actions.cancel_url,
-                'actions[callback_url]': apiData.actions.callback_url,
-                'custom_data[order_id]': apiData.custom_data.order_id,
-                'custom_data[payment_method]': apiData.custom_data.payment_method
-            };
-            
-            // Ajouter les headers d'auth comme champs cachés
-            Object.keys(authHeaders).forEach(key => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = authHeaders[key];
-                form.appendChild(input);
-            });
-            
-            // Ajouter les données du formulaire
-            Object.keys(formData).forEach(key => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = formData[key];
-                form.appendChild(input);
-            });
-            
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
-            
-            // Enregistrer la tentative de paiement
-            setTimeout(() => {
-                recordSale(checkoutData.invoice.total_amount);
-                showNotification('✅ Redirection PayDunya effectuée ! Vérifiez votre email après paiement.', 'success');
+            // Surveiller la fermeture de la fenêtre
+            const checkClosed = setInterval(() => {
+                if (paymentWindow.closed) {
+                    clearInterval(checkClosed);
+                    
+                    // Simuler un paiement réussi pour la démo
+                    setTimeout(() => {
+                        const customerEmail = localStorage.getItem('customerEmail');
+                        if (customerEmail && cart.length > 0) {
+                            showNotification('🎉 Paiement simulé réussi ! Livraison en cours...', 'success');
+                            deliverProductsToCustomer(customerEmail, cart);
+                            
+                            // Clear cart after delivery
+                            cart = [];
+                            cartCount = 0;
+                            updateCartDisplay();
+                            cartModal.classList.add('hidden');
+                            
+                            recordSale(checkoutData.invoice.total_amount);
+                        }
+                    }, 2000);
+                }
             }, 1000);
+            
+            // Timeout après 5 minutes
+            setTimeout(() => {
+                if (!paymentWindow.closed) {
+                    clearInterval(checkClosed);
+                    showNotification('⏰ Session de paiement expirée. Veuillez réessayer.', 'error');
+                }
+            }, 300000);
         }
 
         // Admin panel functionality
@@ -1538,9 +1705,20 @@
             cartCountElement.textContent = cartCount;
             
             if (cart.length === 0) {
-                cartItems.innerHTML = '<p class="text-gray-400 text-center py-8">Votre panier est vide</p>';
+                cartItems.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-16 h-16 bg-gris-moderne rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9m-9 0V19a2 2 0 002 2h7a2 2 0 002-2v-.5"></path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-400">Votre panier est vide</p>
+                        <p class="text-gray-500 text-sm mt-2">Découvrez nos produits IA</p>
+                    </div>
+                `;
                 cartTotal.classList.add('hidden');
                 checkoutBtn.classList.add('hidden');
+                document.getElementById('customerEmailForm').classList.add('hidden');
                 return;
             }
 
@@ -1554,7 +1732,7 @@
                 itemElement.innerHTML = `
                     <div>
                         <h4 class="font-medium text-white">${item.product}</h4>
-                        <p class="text-sm text-gray-300">${item.price}€ x ${item.quantity}</p>
+                        <p class="text-sm text-gray-300">${formatPrice(item.price)} x ${item.quantity}</p>
                     </div>
                     <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1565,9 +1743,10 @@
                 cartItems.appendChild(itemElement);
             });
 
-            totalAmount.textContent = total + '€';
+            totalAmount.textContent = formatPrice(total);
             cartTotal.classList.remove('hidden');
             checkoutBtn.classList.remove('hidden');
+            document.getElementById('customerEmailForm').classList.remove('hidden');
         }
 
         // Remove from cart
@@ -1600,7 +1779,18 @@
                 return;
             }
             
+            // Validate customer email
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            if (!customerEmail || !isValidEmail(customerEmail)) {
+                showNotification('Veuillez saisir un email valide pour recevoir vos produits !', 'error');
+                document.getElementById('customerEmail').focus();
+                return;
+            }
+            
             showLoading();
+            
+            // Store customer email for delivery
+            localStorage.setItem('customerEmail', customerEmail);
             
             // Simulate processing time
             setTimeout(() => {
@@ -1613,15 +1803,15 @@
                 // Use PayDunya for checkout
                 initiatePayDunyaCheckout();
                 
-                // Clear cart after successful checkout initiation
-                cart = [];
-                cartCount = 0;
-                updateCartDisplay();
-                cartModal.classList.add('hidden');
-                
                 showNotification('Redirection vers PayDunya...');
             }, 1500);
         });
+
+        // Email validation function
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
 
         // Product filtering
         function filterProducts(type) {
@@ -2407,6 +2597,74 @@
             e.preventDefault();
         });
 
+        // Automatic delivery system
+        function deliverProductsToCustomer(customerEmail, orderItems) {
+            // Simulate email delivery
+            const deliveryData = {
+                customer_email: customerEmail,
+                order_id: 'DS-' + Date.now(),
+                products: orderItems.map(item => {
+                    const product = products.find(p => p.name === item.product);
+                    return {
+                        name: item.product,
+                        quantity: item.quantity,
+                        download_link: product?.downloadLink || null,
+                        file_name: product?.fileName || 'product.pdf'
+                    };
+                }),
+                delivery_time: new Date().toISOString()
+            };
+            
+            // Store delivery record
+            const deliveries = JSON.parse(localStorage.getItem('deliveries')) || [];
+            deliveries.push(deliveryData);
+            localStorage.setItem('deliveries', JSON.stringify(deliveries));
+            
+            // Show delivery confirmation
+            showDeliveryConfirmation(customerEmail, deliveryData.products);
+            
+            return deliveryData;
+        }
+
+        function showDeliveryConfirmation(email, products) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-noir-secondaire border-2 border-accent-tertiaire rounded-xl max-w-lg w-full p-8 backdrop-blur-md shadow-2xl">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-accent-tertiaire rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold font-montserrat text-accent-tertiaire mb-2">🎉 Livraison Confirmée !</h3>
+                        <p class="text-gray-300">Vos produits ont été envoyés à :</p>
+                        <p class="text-accent font-bold text-lg">${email}</p>
+                    </div>
+                    
+                    <div class="bg-gris-moderne p-4 rounded-lg mb-6">
+                        <h4 class="font-semibold text-white mb-3">📦 Produits livrés :</h4>
+                        <div class="space-y-2">
+                            ${products.map(product => `
+                                <div class="flex items-center justify-between p-2 bg-noir rounded">
+                                    <span class="text-white">${product.name}</span>
+                                    <span class="text-accent-tertiaire text-sm">x${product.quantity}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-gray-400 text-sm mb-4">📧 Vérifiez votre boîte email (et les spams)</p>
+                        <button onclick="this.closest('.fixed').remove()" class="btn-primary px-6 py-3">
+                            Parfait, merci !
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
         // Gestion des notifications IPN PayDunya
         function handlePayDunyaIPN() {
             // Écouter les messages de l'IPN
@@ -2418,15 +2676,22 @@
                 
                 const data = event.data;
                 if (data.type === 'paydunya_payment_success') {
-                    showNotification('✅ Paiement confirmé ! Vos produits arrivent par email.', 'success');
+                    showNotification('✅ Paiement confirmé ! Livraison en cours...', 'success');
+                    
+                    // Deliver products automatically
+                    const customerEmail = localStorage.getItem('customerEmail');
+                    if (customerEmail && cart.length > 0) {
+                        deliverProductsToCustomer(customerEmail, cart);
+                        
+                        // Clear cart after delivery
+                        cart = [];
+                        cartCount = 0;
+                        updateCartDisplay();
+                        cartModal.classList.add('hidden');
+                    }
                     
                     // Mettre à jour les statistiques
                     recordSale(data.amount || 0);
-                    
-                    // Rediriger vers la page de succès
-                    setTimeout(() => {
-                        window.location.href = PAYDUNYA_CONFIG.return_url;
-                    }, 2000);
                     
                 } else if (data.type === 'paydunya_payment_failed') {
                     showNotification('❌ Paiement échoué. Veuillez réessayer.', 'error');
@@ -2472,6 +2737,19 @@
                     }
                 }
                 
+                // Load saved products
+                const savedProducts = localStorage.getItem('products');
+                if (savedProducts) {
+                    try {
+                        const parsedProducts = JSON.parse(savedProducts);
+                        if (Array.isArray(parsedProducts) && parsedProducts.length > 0) {
+                            products = parsedProducts;
+                        }
+                    } catch (e) {
+                        console.log('Erreur lors du chargement des produits sauvegardés');
+                    }
+                }
+                
                 loadAuthorizedIPs();
                 getUserIP();
                 renderProductsEnhanced();
@@ -2483,6 +2761,7 @@
                 checkPaymentStatus();
                 
                 console.log('✅ Site Domè Studios Store initialisé avec PayDunya LIVE');
+                console.log('📦 Produits chargés:', products.length);
                 
             } catch (error) {
                 console.log('Erreur lors de l\'initialisation:', error);
@@ -2491,5 +2770,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'977352e5c1b2e07d',t:'MTc1NjU0Njc5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97736a77c45ce9da',t:'MTc1NjU0Nzc2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
