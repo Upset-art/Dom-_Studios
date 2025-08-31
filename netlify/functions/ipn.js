@@ -1,4 +1,4 @@
-require('dotenv').config();
+const crypto = require('crypto');
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
@@ -6,25 +6,32 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const data = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const data = body.data;
 
     // Vérification de la signature PayDunya
-    const signature = event.headers['x-paydunya-signature'];
-    if (!signature || signature !== process.env.PAYDUNYA_SIGNATURE) {
+    const receivedHash = data.hash; // le hash envoyé par PayDunya
+    const calculatedHash = crypto
+      .createHash('sha256')
+      .update(process.env.PAYDUNYA_MASTER_KEY) // ta clé principale dans Netlify
+      .digest('hex');
+
+    if (!receivedHash || receivedHash !== calculatedHash) {
       return { statusCode: 403, body: 'Signature non valide' };
     }
 
-    // TODO: Traiter le paiement confirmé
-    // TODO: Envoyer les produits par email
+    // ✅ Paiement authentifié
+    // TODO: Traiter le paiement confirmé (ex: sauvegarder en DB)
+    // TODO: Envoyer le produit ou email de confirmation
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify({ success: true }),
     };
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: error.message }),
     };
   }
 };
