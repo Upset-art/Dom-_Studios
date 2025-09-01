@@ -448,206 +448,42 @@
         }
 
         // PayDunya Checkout Function avec intégration Netlify
-        function initiatePayDunyaCheckout() {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const items = cart.map(item => `${item.product} x${item.quantity}`).join(', ');
-            const customerEmail = localStorage.getItem('customerEmail') || document.getElementById('customerEmail').value;
-            
-            // Configuration PayDunya pour production
-            const checkoutData = {
-                invoice: {
-                    total_amount: total,
-                    description: `Commande Domè Studios: ${items}`,
-                    currency: 'XOF'
-                },
-                store: {
-                    name: "Domè Studios",
-                    tagline: "🇨🇮 Ebooks IA & Templates Notion - Made in Africa",
-                    phone: "+225 07 XX XX XX XX",
-                    postal_address: "Abidjan, Côte d'Ivoire",
-                    website_url: PAYDUNYA_CONFIG.site_url,
-                    logo_url: PAYDUNYA_CONFIG.site_url + "/logo.png"
-                },
-                custom_data: {
-                    order_id: 'DS-' + Date.now(),
-                    customer_email: customerEmail,
-                    customer_items: cart,
-                    currency_selected: currentCurrency,
-                    timestamp: new Date().toISOString(),
-                    netlify_site: true,
-                    delivery_files: cart.map(item => {
-                        const product = products.find(p => p.name === item.product);
-                        return {
-                            product_name: item.product,
-                            file_name: product?.fileName || 'product.pdf',
-                            download_link: product?.downloadLink || null,
-                            file_data: product?.fileData || null
-                        };
-                    })
-                },
-                actions: {
-                    cancel_url: PAYDUNYA_CONFIG.cancel_url,
-                    callback_url: PAYDUNYA_CONFIG.callback_url,
-                    return_url: PAYDUNYA_CONFIG.return_url
-                }
-            };
+async function initiatePayDunyaCheckout() {
+  try {
+    // Calcul du total de la commande
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const items = cart.map(item => `${item.product} x${item.quantity}`).join(', ');
+    const customerEmail = localStorage.getItem('customerEmail') || document.getElementById('customerEmail').value;
 
-            // Intégration PayDunya avec gestion d'erreurs robuste
-            try {
-                // Charger le SDK PayDunya dynamiquement si nécessaire
-                if (typeof PayDunya === 'undefined') {
-                    loadPayDunyaSDK().then(() => {
-                        executePayDunyaCheckout(checkoutData);
-                    }).catch(() => {
-                        fallbackPaymentMethod(checkoutData);
-                    });
-                } else {
-                    executePayDunyaCheckout(checkoutData);
-                }
-                
-            } catch (error) {
-                console.log('Erreur PayDunya, utilisation du fallback:', error);
-                fallbackPaymentMethod(checkoutData);
-            }
-        }
+    // Données envoyées à ton backend Netlify
+    const checkoutData = {
+      amount: total,
+      description: `Commande Domè Studios: ${items}`,
+      order_id: 'DS-' + Date.now(),
+      customer_email: customerEmail,
+      customer_items: cart
+    };
 
-        // Charger le SDK PayDunya dynamiquement
-        function loadPayDunyaSDK() {
-            return new Promise((resolve, reject) => {
-                if (typeof PayDunya !== 'undefined') {
-                    resolve();
-                    return;
-                }
+    // Appel à la Netlify Function qui va créer la facture PayDunya
+    const response = await fetch("/.netlify/functions/createInvoice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(checkoutData)
+    });
 
-                const script = document.createElement('script');
-                script.src = 'https://app.paydunya.com/checkout/checkout.js';
-                script.onload = () => {
-                    if (typeof PayDunya !== 'undefined') {
-                        resolve();
-                    } else {
-                        reject(new Error('PayDunya SDK non chargé'));
-                    }
-                };
-                script.onerror = () => reject(new Error('Erreur de chargement PayDunya'));
-                document.head.appendChild(script);
-                
-                // Timeout après 10 secondes
-                setTimeout(() => reject(new Error('Timeout PayDunya')), 10000);
-            });
-        }
+    const result = await response.json();
 
-        // Exécuter le checkout PayDunya avec API réelle
-        function executePayDunyaCheckout(checkoutData, paymentMethod = 'card') {
-            try {
-                // Configuration PayDunya avec vraies clés
-                const paydunyaSetup = {
-                    public_key: PAYDUNYA_CONFIG.public_key,
-                    private_key: PAYDUNYA_CONFIG.private_key,
-                    token: PAYDUNYA_CONFIG.token,
-                    master_key: PAYDUNYA_CONFIG.master_key,
-                    mode: 'live',
-                    sandbox_mode: false
-                };
-
-                // Initialiser PayDunya
-                if (typeof PayDunya !== 'undefined') {
-                    PayDunya.setup(paydunyaSetup);
-                    
-                    // Créer la facture
-                    const invoice = PayDunya.invoice.create({
-                        total_amount: checkoutData.invoice.total_amount,
-                        description: checkoutData.invoice.description,
-                        currency: 'XOF',
-                        payment_method: paymentMethod
-                    });
-                    
-                    // Configurer le store
-                    PayDunya.store.set({
-                        name: PAYDUNYA_CONFIG.app_name,
-                        tagline: PAYDUNYA_CONFIG.app_description,
-                        phone: "+225 XX XX XX XX",
-                        postal_address: "Abidjan, Côte d'Ivoire",
-                        website_url: PAYDUNYA_CONFIG.site_url,
-                        logo_url: PAYDUNYA_CONFIG.site_url + "/logo.png"
-                    });
-                    
-                    // Configurer les URLs de callback
-                    PayDunya.actions.set({
-                        cancel_url: PAYDUNYA_CONFIG.cancel_url,
-                        return_url: PAYDUNYA_CONFIG.return_url,
-                        callback_url: PAYDUNYA_CONFIG.callback_url
-                    });
-                    
-                    // Lancer le checkout
-                    PayDunya.checkout.redirect();
-                    showNotification('🚀 Redirection vers PayDunya en cours...');
-                } else {
-                    throw new Error('PayDunya SDK non disponible');
-                }
-            } catch (error) {
-                console.log('Erreur lors de l\'exécution PayDunya:', error);
-                fallbackPaymentMethod(checkoutData, paymentMethod);
-            }
-        }
-
-        // Méthode de paiement de secours avec API directe
-        function fallbackPaymentMethod(checkoutData, paymentMethod = 'card') {
-            showNotification('💳 Initialisation du paiement PayDunya...');
-            
-            // Créer une URL PayDunya avec les paramètres
-            const paydunyaParams = new URLSearchParams({
-                'public_key': PAYDUNYA_CONFIG.public_key,
-                'amount': checkoutData.invoice.total_amount,
-                'currency': 'XOF',
-                'description': checkoutData.invoice.description,
-                'order_id': checkoutData.custom_data.order_id,
-                'customer_email': checkoutData.custom_data.customer_email,
-                'return_url': PAYDUNYA_CONFIG.return_url,
-                'cancel_url': PAYDUNYA_CONFIG.cancel_url,
-                'callback_url': PAYDUNYA_CONFIG.callback_url,
-                'payment_method': paymentMethod,
-                'store_name': 'Domè Studios',
-                'store_website': PAYDUNYA_CONFIG.site_url
-            });
-
-            // Redirection directe vers PayDunya
-            const paydunyaUrl = `https://app.paydunya.com/sandbox-api/v1/checkout-invoice/create?${paydunyaParams.toString()}`;
-            
-            // Ouvrir dans une nouvelle fenêtre
-            const paymentWindow = window.open(paydunyaUrl, 'PayDunya', 'width=800,height=600,scrollbars=yes,resizable=yes');
-            
-            // Surveiller la fermeture de la fenêtre
-            const checkClosed = setInterval(() => {
-                if (paymentWindow.closed) {
-                    clearInterval(checkClosed);
-                    
-                    // Simuler un paiement réussi pour la démo
-                    setTimeout(() => {
-                        const customerEmail = localStorage.getItem('customerEmail');
-                        if (customerEmail && cart.length > 0) {
-                            showNotification('🎉 Paiement simulé réussi ! Livraison en cours...', 'success');
-                            deliverProductsToCustomer(customerEmail, cart);
-                            
-                            // Clear cart after delivery
-                            cart = [];
-                            cartCount = 0;
-                            updateCartDisplay();
-                            cartModal.classList.add('hidden');
-                            
-                            recordSale(checkoutData.invoice.total_amount);
-                        }
-                    }, 2000);
-                }
-            }, 1000);
-            
-            // Timeout après 5 minutes
-            setTimeout(() => {
-                if (!paymentWindow.closed) {
-                    clearInterval(checkClosed);
-                    showNotification('⏰ Session de paiement expirée. Veuillez réessayer.', 'error');
-                }
-            }, 300000);
-        }
+    if (result.invoice_url) {
+      showNotification('🚀 Redirection vers PayDunya en cours...');
+      window.location.href = result.invoice_url; // Redirection vers la page de paiement
+    } else {
+      throw new Error(result.error || "Impossible de créer la facture PayDunya.");
+    }
+  } catch (error) {
+    console.error("Erreur lors du paiement PayDunya:", error);
+    showNotification("❌ Erreur lors du paiement. Veuillez réessayer.", "error");
+  }
+}
 
         // Admin panel functionality
         adminToggle.addEventListener('click', () => {
