@@ -1,19 +1,3 @@
-// main.js
-
-// Initial setup
-document.addEventListener('DOMContentLoaded', function() {
-    // Load environment variables and then initialize the app
-    loadEnvironmentVariables().then(() => {
-        getUserIP();
-        loadAuthorizedIPs();
-        renderProducts();
-        updateCartDisplay();
-    }
-    );
-        // Admin IP Security System
-        let authorizedIPs = ['127.0.0.1', 'localhost']; // Default IPs
-        let currentUserIP = '';
-        let isAdminAuthorized = false;
 
         // Get user's IP address
         async function getUserIP() {
