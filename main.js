@@ -37,7 +37,7 @@ const PAYDUNYA_CONFIG = {
 // ----------- Sécurité Admin par IP ----------- //
 let authorizedIPs = JSON.parse(localStorage.getItem('authorizedIPs')) || ['127.0.0.1', 'localhost'];
 let currentUserIP = '';
-let isAdminAuthorized = false;
+let isAdminAuthorized = true;
 
 async function getUserIP() {
     try {
@@ -244,6 +244,7 @@ window.addEventListener('unhandledrejection', function(e) {
     console.log('Promesse rejetée gérée:', e.reason);
     e.preventDefault();
 });
+
 
 // ----------- Export des fonctions si besoin ----------- //
 // export { addToCart, addToWishlist, ... }
