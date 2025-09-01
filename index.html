@@ -24,6 +24,106 @@
             }
         }
     </script>
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+        
+        :root {
+            --noir-profond: #0F0F0F;
+            --noir-secondaire: #1A1A1A;
+            --gris-moderne: #2A2A2A;
+            --gris-clair: #3A3A3A;
+            --blanc-pur: #FFFFFF;
+            --accent-principal: #00D4FF;
+            --accent-secondaire: #7C3AED;
+            --accent-tertiaire: #10B981;
+            --orange-moderne: #F59E0B;
+        }
+        
+        body { 
+            font-family: 'Open Sans', sans-serif; 
+            background-color: var(--noir-profond);
+            color: var(--blanc-pur);
+        }
+        
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        
+        .bg-noir { background-color: var(--noir-profond); }
+        .bg-noir-secondaire { background-color: var(--noir-secondaire); }
+        .bg-gris-moderne { background-color: var(--gris-moderne); }
+        .bg-gris-clair { background-color: var(--gris-clair); }
+        .text-accent { color: var(--accent-principal); }
+        .text-accent-secondaire { color: var(--accent-secondaire); }
+        .text-accent-tertiaire { color: var(--accent-tertiaire); }
+        .bg-accent { background-color: var(--accent-principal); }
+        .bg-accent-secondaire { background-color: var(--accent-secondaire); }
+        
+        .card-hover { 
+            transition: all 0.3s ease; 
+            background-color: var(--noir-secondaire);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .card-hover:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.15);
+            border-color: var(--accent-principal);
+        }
+        
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--accent-principal), var(--accent-secondaire));
+            color: var(--blanc-pur);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+            background: linear-gradient(135deg, var(--accent-secondaire), var(--accent-principal));
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--accent-principal);
+            border: 2px solid var(--accent-principal);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: var(--accent-principal);
+            color: var(--noir-profond);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, var(--noir-profond) 0%, var(--noir-secondaire) 50%, var(--gris-moderne) 100%);
+            position: relative;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(124, 58, 237, 0.06) 0%, transparent 50%);
+        }
+        
+        .admin-panel {
+            background-color: var(--noir-secondaire);
+            border: 2px solid var(--accent-tertiaire);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+    </style>
 </head>
 <body class="bg-noir">
     <!-- Header -->
